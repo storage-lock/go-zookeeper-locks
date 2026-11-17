@@ -4,8 +4,8 @@ go 1.23
 
 require (
 	github.com/go-zookeeper/zk v1.0.4
-	github.com/storage-lock/go-storage v0.0.3
-	github.com/storage-lock/go-storage-lock v0.0.6
+	github.com/storage-lock/go-storage v0.1.0
+	github.com/storage-lock/go-storage-lock v0.1.0
 	github.com/storage-lock/go-storage-lock-factory v0.0.2
 	github.com/storage-lock/go-zookeeper-storage v0.0.1
 	github.com/stretchr/testify v1.11.1
@@ -23,10 +23,4 @@ require (
 	github.com/storage-lock/go-storage-events v0.0.6 // indirect
 	github.com/storage-lock/go-utils v0.0.2 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-)
-
-replace (
-	github.com/storage-lock/go-storage => ../go-storage
-	github.com/storage-lock/go-storage-lock => ../go-storage-lock
-	github.com/storage-lock/go-zookeeper-storage => ../go-zookeeper-storage
 )
