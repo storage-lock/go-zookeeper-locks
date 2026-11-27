@@ -18,11 +18,21 @@ func testZkHosts() []string {
 	return []string{"127.0.0.1:2181"}
 }
 
+// 连接真实的 ZooKeeper；不可达时跳过整条测试。
+//
+// zk.Connect 是异步的，连不上不会立刻报错，要等第一次操作才失败并返回
+// 一个不可用的连接——此前据此继续调用工厂方法，最终 panic。
+// 这里主动探一次，把"环境不具备"提前变成 skip。
 func testZkConn(t *testing.T) *zk.Conn {
 	t.Helper()
 	conn, _, err := zk.Connect(testZkHosts(), 5*time.Second)
-	assert.Nil(t, err)
+	if err != nil {
+		t.Skipf("ZooKeeper 不可用，跳过集成测试: %v", err)
+	}
 	t.Cleanup(func() { conn.Close() })
+	if _, _, err := conn.Get("/"); err != nil {
+		t.Skipf("ZooKeeper 不可用，跳过集成测试: %v", err)
+	}
 	return conn
 }
 
@@ -62,7 +72,9 @@ func TestGetZookeeperLockFactoryByHosts(t *testing.T) {
 	hosts := testZkHosts()
 
 	factory, err := GetZookeeperLockFactoryByHosts(ctx, hosts)
-	assert.Nil(t, err)
+	if err != nil {
+		t.Skipf("ZooKeeper 不可用，跳过集成测试: %v", err)
+	}
 	assert.NotNil(t, factory)
 
 	// 缓存命中
